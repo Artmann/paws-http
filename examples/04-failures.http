@@ -1,0 +1,47 @@
+## ============================================================================
+## Failure modes — one step fails on purpose
+## ============================================================================
+## Handy for demos: shows the red `✗`, the failing assertion message, and
+## how the run keeps going unless `--fail-fast` is set.
+## ============================================================================
+
+### 1.1 Passes cleanly
+GET {{jsonplaceholder}}/posts/1
+
+> {%
+    client.test("is a real post", function() {
+        client.assert(response.status === 200, "nope");
+        client.assert(response.body.id === 1, "wrong id");
+    });
+%}
+
+### 1.2 Intentionally fails a test
+GET {{jsonplaceholder}}/posts/1
+
+> {%
+    client.test("title contains 'not-actually-in-the-title'", function() {
+        client.assert(
+            response.body.title.includes("not-actually-in-the-title"),
+            "substring not found: title was " + JSON.stringify(response.body.title)
+        );
+    });
+%}
+
+### 1.3 Hits a URL that returns 404
+GET {{jsonplaceholder}}/posts/9999999
+
+> {%
+    client.test("server said this exists", function() {
+        client.assert(response.status === 200, "got " + response.status + " instead");
+    });
+%}
+
+### 1.4 Passes again — shows that the suite keeps going
+GET {{jsonplaceholder}}/users/{{default_user_id}}
+
+> {%
+    client.test("user returned", function() {
+        client.assert(response.status === 200, "no user");
+        client.assert(typeof response.body.email === "string", "no email");
+    });
+%}

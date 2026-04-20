@@ -1,0 +1,42 @@
+## ============================================================================
+## Built-in variables — {{$uuid}}, {{$timestamp}}, {{$random.integer}}
+## ============================================================================
+## httpbin.org/anything echoes the request back, so we can assert that the
+## built-ins were substituted correctly before the wire.
+## ============================================================================
+
+### 1.1 Sends built-ins in a query string
+GET {{httpbin}}/anything?trace={{$uuid}}&ts={{$timestamp}}&n={{$random.integer(1, 9)}}
+Accept: application/json
+
+> {%
+    client.test("httpbin received the values", function() {
+        client.assert(response.status === 200, "bad status");
+        var args = response.body.args;
+        client.assert(/^[0-9a-f-]{36}$/.test(args.trace), "uuid not substituted: " + args.trace);
+        client.assert(/^\d+$/.test(args.ts), "timestamp not numeric: " + args.ts);
+        var n = parseInt(args.n, 10);
+        client.assert(n >= 1 && n <= 9, "random out of range: " + args.n);
+    });
+    client.global.set("last_trace", response.body.args.trace);
+%}
+
+### 1.2 Uses a built-in inside a JSON body
+POST {{httpbin}}/anything
+Content-Type: application/json
+Accept: application/json
+
+{
+  "request_id": "{{$uuid}}",
+  "previous_trace": "{{last_trace}}",
+  "created_at_ms": {{$timestamp}}
+}
+
+> {%
+    client.test("body was forwarded", function() {
+        client.assert(response.status === 200, "bad status");
+        var echoed = response.body.json;
+        client.assert(echoed.request_id !== echoed.previous_trace, "two uuids should differ");
+        client.assert(typeof echoed.created_at_ms === "number", "timestamp became a string");
+    });
+%}

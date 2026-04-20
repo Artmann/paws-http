@@ -1,0 +1,40 @@
+## ============================================================================
+## Chained requests — step 2 uses a value captured from step 1
+## ============================================================================
+## Shows `client.global.set(…)` feeding into `{{var}}` in a later step.
+## ============================================================================
+
+### 1.1 Create a post
+POST {{jsonplaceholder}}/posts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "hello from pawsh",
+  "body": "this is a demo",
+  "userId": {{default_user_id}}
+}
+
+> {%
+    client.test("create succeeded", function() {
+        client.assert(response.status === 201, "expected 201 Created");
+        client.assert(response.body.id, "no id returned");
+    });
+    // Capture the id so the next step can look it up.
+    client.global.set("post_id", response.body.id);
+%}
+
+### 1.2 Read the post back
+GET {{jsonplaceholder}}/posts/{{post_id}}
+Accept: application/json
+
+> {%
+    client.test("status is 200 or 404", function() {
+        // jsonplaceholder is read-only so the record doesn't actually exist.
+        // Both outcomes are informative for a demo flow.
+        client.assert(
+            response.status === 200 || response.status === 404,
+            "unexpected status: " + response.status
+        );
+    });
+%}
