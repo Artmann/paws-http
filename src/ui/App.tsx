@@ -2,12 +2,12 @@ import { readFile, stat } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { Box, render, Text, useApp } from 'ink'
 import React, { useEffect, useState } from 'react'
-import { discoverHttpFiles, type DiscoveredFile } from '../discover'
-import { findEnvFiles, resolveEnv, type ResolvedEnv } from '../env'
-import { parseHttpFile } from '../parser/parser'
-import type { Flow } from '../parser/types'
-import { Launcher } from './Launcher'
-import { RunScreen } from './RunScreen'
+import { discoverHttpFiles, type DiscoveredFile } from '../discover.js'
+import { findEnvFiles, resolveEnv, type ResolvedEnv } from '../env.js'
+import { parseHttpFile } from '../parser/parser.js'
+import type { Flow } from '../parser/types.js'
+import { Launcher } from './Launcher.js'
+import { RunScreen } from './RunScreen.js'
 
 interface CliArgs {
   env?: string

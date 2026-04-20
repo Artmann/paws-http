@@ -1,16 +1,43 @@
 {
   "name": "pawsh",
-  "module": "src/cli.ts",
-  "type": "module",
+  "version": "0.1.0",
+  "description": "Terminal-native runner for JetBrains Rider / IntelliJ .http flow files, with an interactive Ink TUI and a plain-text reporter for CI.",
+  "keywords": [
+    "http",
+    "rest",
+    "rider",
+    "intellij",
+    "jetbrains",
+    "http-client",
+    "cli",
+    "tui",
+    "ink",
+    "api",
+    "testing"
+  ],
   "license": "MIT",
-  "private": true,
+  "type": "module",
+  "main": "dist/cli.js",
   "bin": {
-    "pawsh": "src/cli.ts"
+    "pawsh": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/cli.js",
+    "clean": "rm -rf dist",
+    "dev": "bun src/cli.ts",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
-    "test": "bun test"
+    "lint": "eslint .",
+    "prepublishOnly": "bun run clean && bun run build",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -24,6 +51,9 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/react": "^19.2.14",
-    "prettier": "^3.8.3"
+    "eslint": "^9",
+    "globals": "^15",
+    "prettier": "^3.8.3",
+    "typescript-eslint": "^8"
   }
 }

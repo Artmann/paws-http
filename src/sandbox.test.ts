@@ -4,7 +4,7 @@ import {
   runPreScript,
   UtilitiesNotSupportedError,
   type ScriptContext
-} from './sandbox'
+} from './sandbox.js'
 
 function ctx(): ScriptContext {
   return { globals: {}, request: {}, tests: [], logs: [] }

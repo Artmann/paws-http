@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import type { AuthConfig, ResolvedEnv } from './env'
+import type { AuthConfig, ResolvedEnv } from './env.js'
 
 export class VarResolutionError extends Error {}
 

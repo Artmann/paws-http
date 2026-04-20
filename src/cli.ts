@@ -1,16 +1,16 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { discoverHttpFiles } from './discover'
-import { findEnvFiles, listEnvironments, resolveEnv } from './env'
-import { ParseError } from './parser/types'
-import { parseHttpFile } from './parser/parser'
+import { discoverHttpFiles } from './discover.js'
+import { findEnvFiles, listEnvironments, resolveEnv } from './env.js'
+import { ParseError } from './parser/types.js'
+import { parseHttpFile } from './parser/parser.js'
 import {
   printFlowStart,
   printFlowSummary,
   printStepReport
-} from './reporter/console'
-import { runFlow } from './runner/runner'
+} from './reporter/console.js'
+import { runFlow } from './runner/runner.js'
 
 interface CliArgs {
   command: 'run' | 'env' | 'default'
@@ -177,7 +177,7 @@ async function runInteractive(
   args: CliArgs = { command: 'run', failFast: false }
 ): Promise<void> {
   // Lazy-import Ink so non-interactive runs don't pull in React.
-  const { startInteractive } = await import('./ui/App')
+  const { startInteractive } = await import('./ui/App.js')
   await startInteractive(target, args)
 }
 

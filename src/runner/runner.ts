@@ -1,16 +1,16 @@
 import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
-import type { ResolvedEnv } from '../env'
-import type { Flow, Header, Step } from '../parser/types'
-import { runPostScript, runPreScript, type ScriptContext } from '../sandbox'
-import { createScope, substitute, type VarScope } from '../vars'
+import type { ResolvedEnv } from '../env.js'
+import type { Flow, Step } from '../parser/types.js'
+import { runPostScript, runPreScript, type ScriptContext } from '../sandbox.js'
+import { createScope, substitute, type VarScope } from '../vars.js'
 import type {
   FlowReport,
   PreparedRequest,
   ResponseSnapshot,
   RunnerEvent,
   StepReport
-} from './types'
+} from './types.js'
 
 export interface RunOptions {
   env: ResolvedEnv

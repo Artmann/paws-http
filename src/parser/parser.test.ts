@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test'
-import { parseHttpFile } from './parser'
+import { parseHttpFile } from './parser.js'
 
 test('parses a single GET request', () => {
   const src = `### Ping

@@ -1,0 +1,15 @@
+src/
+scripts/
+examples/
+docs/
+.github/
+tsconfig.json
+tsconfig.build.json
+eslint.config.js
+.prettierrc.json
+.prettierignore
+release-please-config.json
+.release-please-manifest.json
+bun.lock
+CONTRIBUTING.md
+CLAUDE.md

@@ -1,18 +1,18 @@
 import { Box, Text, useInput, useStdout } from 'ink'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { ResolvedEnv } from '../env'
-import type { Flow, Step } from '../parser/types'
-import { runFlow } from '../runner/runner'
-import type { FlowReport, StepReport } from '../runner/types'
-import { theme } from '../theme'
-import type { LoadedFile } from './App'
+import type { ResolvedEnv } from '../env.js'
+import type { Flow, Step } from '../parser/types.js'
+import { runFlow } from '../runner/runner.js'
+import type { FlowReport, StepReport } from '../runner/types.js'
+import { theme } from '../theme.js'
+import type { LoadedFile } from './App.js'
 import {
   Duration,
   Kbd,
   MethodBadge,
   ProgressBar,
   StatusIcon
-} from './primitives'
+} from './primitives.js'
 
 type Pane = 'files' | 'steps' | 'response'
 type Tab = 'request' | 'response' | 'headers' | 'tests'
@@ -689,7 +689,7 @@ function ResponseStatusChip({ report }: { report: StepReport }) {
 
 function TabRow({
   tab,
-  onChange,
+  onChange: _onChange,
   report
 }: {
   tab: Tab
@@ -870,7 +870,7 @@ function clipLines(text: string, maxLines: number, width: number): string[] {
 }
 
 function StatusBar({
-  activePane,
+  activePane: _activePane,
   runState,
   env,
   summary,

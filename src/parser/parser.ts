@@ -5,8 +5,8 @@ import type {
   HttpMethod,
   ParseWarning,
   Step
-} from './types'
-import { ParseError } from './types'
+} from './types.js'
+import { ParseError } from './types.js'
 
 const METHODS: readonly HttpMethod[] = [
   'GET',
@@ -26,7 +26,7 @@ const PRE_OPEN_RE = /^<\s*\{%\s*$/
 const POST_OPEN_RE = /^>\s*\{%\s*$/
 const SCRIPT_CLOSE_RE = /^\s*%\}\s*$/
 const FILE_BODY_RE = /^<\s+(\S+.*)$/
-const HEADER_RE = /^([A-Za-z0-9_\-]+)\s*:\s*(.*)$/
+const HEADER_RE = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/
 const STEP_NUM_RE = /^(\d+(?:\.\d+)*)\s*(.*)$/
 /** Optional trailing ` HTTP/1.1` on a request line — strip before method match. */
 const HTTP_VERSION_RE = /\s+HTTP\/\d(?:\.\d)?\s*$/

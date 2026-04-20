@@ -1,5 +1,5 @@
-import type { Flow, Step } from '../parser/types'
-import type { TestResult } from '../sandbox'
+import type { Flow, Step } from '../parser/types.js'
+import type { TestResult } from '../sandbox.js'
 
 export type StepStatus =
   | 'pending'
