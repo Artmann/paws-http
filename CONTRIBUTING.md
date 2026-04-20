@@ -124,12 +124,44 @@ CI=1 bun src/cli.ts run examples        # end-to-end, hits public APIs
 - **Prefer editing existing files** over creating new ones when the change is
   small.
 
+## Commit style
+
+We use [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat: …` — new user-facing feature (minor bump)
+- `fix: …` — bug fix (patch bump)
+- `feat!: …` / `fix!: …` — breaking change (major bump once > 1.0)
+- `chore: …` / `docs: …` / `refactor: …` / `test: …` / `ci: …` — no release
+
+`release-please` reads these to generate `CHANGELOG.md` and bump the version.
+
 ## Opening a PR
 
 - Include a note of what `bun scripts/parse-all.ts <corpus>` reported before and
   after your change.
 - If you're adding a new syntax feature, bump the "Supported HTTP file syntax"
   list in `README.md`.
-- No need for changelogs or release notes yet; the project is pre-1.0.
+- Use Conventional Commit prefixes (see above) so the release machinery picks
+  up your change.
+
+## Releases
+
+Releases are automated via
+[release-please](https://github.com/googleapis/release-please). Pushing to
+`main` opens/updates a release PR that bumps the version and regenerates
+`CHANGELOG.md` from Conventional Commits. Merging that PR tags a GitHub
+release and publishes to npm.
+
+One-time setup for a new fork/repo:
+
+1. Create an `NPM_TOKEN` (npm → Settings → Access Tokens → *automation*
+   token) and add it as a GitHub Actions secret named `NPM_TOKEN`.
+2. In repo settings, enable *Allow GitHub Actions to create and approve
+   pull requests* (release-please opens PRs).
+3. First push to `main` will open the initial release PR.
+
+CI (`.github/workflows/ci.yml`) runs four separate jobs — lint, typecheck,
+test, build — on Node 22, 24, and 25 using Bun as the package manager.
+Each shows up as a distinct check on PRs.
 
 Thanks — happy to review.
