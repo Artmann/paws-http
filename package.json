@@ -1,5 +1,5 @@
 {
-  "name": "pawsh",
+  "name": "paws-http",
   "version": "0.1.0",
   "description": "Terminal-native runner for JetBrains Rider / IntelliJ .http flow files, with an interactive Ink TUI and a plain-text reporter for CI.",
   "keywords": [
@@ -19,7 +19,7 @@
   "type": "module",
   "main": "dist/cli.js",
   "bin": {
-    "pawsh": "dist/cli.js"
+    "paws": "dist/cli.js"
   },
   "files": [
     "dist",
