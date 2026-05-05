@@ -4,7 +4,7 @@
 > files from the command line, with an interactive three-pane TUI or
 > straight-line output for CI.
 
-![paws-http running the bundled examples](docs/screenshot.png)
+![paws-http running the bundled examples](https://raw.githubusercontent.com/Artmann/paws-http/main/docs/screenshot.png)
 
 `paws-http` is to the terminal what the JetBrains HTTP Client is to Rider. Point it
 at a `.http` file (or a directory full of them) and it'll run the requests,
