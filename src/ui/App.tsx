@@ -128,7 +128,7 @@ function App({ initial, args }: { initial: Screen; args: CliArgs }) {
   if (screen.kind === 'error') {
     return (
       <Box padding={1}>
-        <Text color="red">pawsh: {screen.message}</Text>
+        <Text color="red">paws-http: {screen.message}</Text>
       </Box>
     )
   }

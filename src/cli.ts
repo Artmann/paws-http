@@ -60,7 +60,7 @@ function parseArgs(argv: string[]): CliArgs {
     } else if (!arg.startsWith('-') && !args.path) {
       args.path = arg
     } else {
-      console.error(`pawsh: unknown argument: ${arg}`)
+      console.error(`paws-http: unknown argument: ${arg}`)
       process.exit(1)
     }
   }
@@ -68,15 +68,15 @@ function parseArgs(argv: string[]): CliArgs {
 }
 
 function printHelp(): void {
-  console.log(`pawsh — interactive HTTP flow runner
+  console.log(`paws-http — interactive HTTP flow runner
 
 Usage:
-  pawsh                         browse files interactively
-  pawsh run <file.http>         run a single .http flow
-  pawsh run <dir>               run every .http in a directory
-  pawsh run <file> --only 1.3   run a single step
-  pawsh env list                list environments in nearest env.json
-  pawsh env use <name>          set default environment
+  paws-http                         browse files interactively
+  paws-http run <file.http>         run a single .http flow
+  paws-http run <dir>               run every .http in a directory
+  paws-http run <file> --only 1.3   run a single step
+  paws-http env list                list environments in nearest env.json
+  paws-http env use <name>          set default environment
 
 Flags:
   -e, --env <name>             environment (default: local)
@@ -109,13 +109,13 @@ async function main(): Promise<void> {
       }
       return
     }
-    console.error('pawsh: unknown env subcommand')
+    console.error('paws-http: unknown env subcommand')
     process.exit(1)
   }
 
   // command === 'run'
   if (!args.path) {
-    console.error('pawsh run: need a file or directory')
+    console.error('paws-http run: need a file or directory')
     process.exit(1)
   }
   const target = resolve(args.path)
@@ -131,7 +131,7 @@ async function main(): Promise<void> {
 async function runNonInteractive(target: string, args: CliArgs): Promise<void> {
   const files = await discoverHttpFiles(target)
   if (files.length === 0) {
-    console.error(`pawsh: no .http files under ${target}`)
+    console.error(`paws-http: no .http files under ${target}`)
     process.exit(1)
   }
 
@@ -146,7 +146,7 @@ async function runNonInteractive(target: string, args: CliArgs): Promise<void> {
       if (err instanceof ParseError) {
         console.error(err.message)
       } else {
-        console.error(`pawsh: failed to parse ${file.path}: ${String(err)}`)
+        console.error(`paws-http: failed to parse ${file.path}: ${String(err)}`)
       }
       totalFailed += 1
       continue

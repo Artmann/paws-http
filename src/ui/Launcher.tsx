@@ -15,15 +15,15 @@ export function Launcher({ onBrowse, onQuit }: Props) {
   })
 
   const lines: Array<[string, string?]> = [
-    ['pawsh — interactive HTTP flow runner   v0.1.0', theme.brand],
+    ['paws-http — interactive HTTP flow runner   v0.1.0', theme.brand],
     ['Run Rider / IntelliJ .http flows from the terminal.', theme.fgSubtle],
     [''],
     ['Usage:', theme.fgDim],
-    ['  pawsh                         browse files interactively'],
-    ['  pawsh run <file.http>         run a single .http flow'],
-    ['  pawsh run <dir>               run every .http in a directory'],
-    ['  pawsh run <file> --only 1.3   run a single step'],
-    ['  pawsh env list                list environments'],
+    ['  paws-http                         browse files interactively'],
+    ['  paws-http run <file.http>         run a single .http flow'],
+    ['  paws-http run <dir>               run every .http in a directory'],
+    ['  paws-http run <file> --only 1.3   run a single step'],
+    ['  paws-http env list                list environments'],
     [''],
     ['Flags:', theme.fgDim],
     ['  -e, --env <name>     environment (dev · staging · local · mock)'],
@@ -45,7 +45,7 @@ export function Launcher({ onBrowse, onQuit }: Props) {
           color={theme.brand}
           bold
         >
-          pawsh{' '}
+          paws-http{' '}
         </Text>
         <Text color={theme.fgSubtle}>terminal HTTP flow runner</Text>
       </Box>

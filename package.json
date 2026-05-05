@@ -19,7 +19,7 @@
   "type": "module",
   "main": "dist/cli.js",
   "bin": {
-    "paws": "dist/cli.js"
+    "paws-http": "dist/cli.js"
   },
   "files": [
     "dist",

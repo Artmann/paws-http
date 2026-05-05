@@ -1,20 +1,20 @@
-# pawsh examples
+# paws-http examples
 
 Demo `.http` flows that hit public APIs — use them for manual testing or
 screenshots. They require no local services, just an internet connection.
 
 ```sh
 # Run everything
-pawsh run examples
+paws-http run examples
 
 # Run one file, interactively
-pawsh run examples/02-chain.http
+paws-http run examples/02-chain.http
 
 # Run a single step non-interactively
-pawsh run examples/01-hello.http --only 1.1
+paws-http run examples/01-hello.http --only 1.1
 
 # From the picker
-pawsh
+paws-http
 ```
 
 ## Files

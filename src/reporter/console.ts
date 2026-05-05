@@ -47,7 +47,7 @@ function iconForStatus(s: StepReport['status']): string {
 export function printFlowStart(flowFile: string, env: string): void {
   const rel = flowFile
   console.log()
-  console.log(`${brand('pawsh')} ${dim('running')} ${rel}`)
+  console.log(`${brand('paws-http')} ${dim('running')} ${rel}`)
   console.log(`${dim('env:')} ${cyan(env)}`)
   console.log()
 }

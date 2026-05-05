@@ -1,4 +1,4 @@
-# Contributing to pawsh
+# Contributing to paws-http
 
 Thanks for poking around the source. This guide covers the layout, the
 development loop, and how to add features without breaking the parser for the
@@ -63,7 +63,7 @@ src/
     console.ts          — pretty console output for non-interactive runs
   ui/
     App.tsx             — Ink entry, screen dispatcher
-    Launcher.tsx        — `pawsh` (no args) welcome
+    Launcher.tsx        — `paws-http` (no args) welcome
     Picker.tsx          — (kept for future use)
     RunScreen.tsx       — three-pane live view
     primitives.tsx      — StatusIcon, MethodBadge, ProgressBar, Kbd

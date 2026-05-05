@@ -36,7 +36,7 @@ export class ScriptError extends Error {
 export class UtilitiesNotSupportedError extends ScriptError {
   constructor(public readonly line: number) {
     super(
-      `This .http file imports from "utilities" (line ${line}). pawsh v1 does not support utilities.js — skip this step or remove the import.`
+      `This .http file imports from "utilities" (line ${line}). paws-http v1 does not support utilities.js — skip this step or remove the import.`
     )
   }
 }

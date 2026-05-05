@@ -79,7 +79,7 @@ function resolveBuiltin(expr: string, scope: VarScope): unknown {
     if (cfg.type === 'OAuth2') {
       if (!cfg.privateToken) {
         throw new VarResolutionError(
-          `OAuth2 auth "${name}" has no Token set in http-client.private.env.json — pawsh v1 cannot perform the OAuth2 Implicit flow. Paste a bearer token under Security.Auth.${name}.Token in the private env file.`
+          `OAuth2 auth "${name}" has no Token set in http-client.private.env.json — paws-http v1 cannot perform the OAuth2 Implicit flow. Paste a bearer token under Security.Auth.${name}.Token in the private env file.`
         )
       }
       return cfg.privateToken

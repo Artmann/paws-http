@@ -1,12 +1,12 @@
-# pawsh
+# paws-http
 
 > A terminal-native HTTP flow runner. Run and explore Rider/IntelliJ `.http`
 > files from the command line, with an interactive three-pane TUI or
 > straight-line output for CI.
 
-![pawsh running the bundled examples](docs/screenshot.png)
+![paws-http running the bundled examples](docs/screenshot.png)
 
-`pawsh` is to the terminal what the JetBrains HTTP Client is to Rider. Point it
+`paws-http` is to the terminal what the JetBrains HTTP Client is to Rider. Point it
 at a `.http` file (or a directory full of them) and it'll run the requests,
 execute the JavaScript pre- and post-scripts, evaluate
 `client.test`/`client.assert` assertions, and chain values between steps via
@@ -22,16 +22,16 @@ execute the JavaScript pre- and post-scripts, evaluate
 ## Install
 
 ```sh
-git clone <this-repo> pawsh
-cd pawsh
+git clone <this-repo> paws-http
+cd paws-http
 bun install
-bun link              # exposes `pawsh` on your $PATH via the bin entry
+bun link              # exposes `paws-http` on your $PATH via the bin entry
 ```
 
 Or run it without installing:
 
 ```sh
-bun /path/to/pawsh/src/cli.ts run <file-or-dir>
+bun /path/to/paws-http/src/cli.ts run <file-or-dir>
 ```
 
 Requires [Bun](https://bun.com) 1.3+.
@@ -41,27 +41,27 @@ Requires [Bun](https://bun.com) 1.3+.
 Try the bundled examples (they hit public APIs — no local server needed):
 
 ```sh
-pawsh                         # launcher
-pawsh run examples            # interactive three-pane view
-pawsh run examples/01-hello.http
-pawsh run examples/01-hello.http --only 1.1   # single step, non-interactive
+paws-http                         # launcher
+paws-http run examples            # interactive three-pane view
+paws-http run examples/01-hello.http
+paws-http run examples/01-hello.http --only 1.1   # single step, non-interactive
 ```
 
 ## Usage
 
 ```
-pawsh                         browse files interactively (launcher)
-pawsh run <file.http>         run a single .http flow
-pawsh run <dir>               run every .http in a directory, recursively
-pawsh run <file> --only 1.3   run one step from a file
-pawsh env list                list environments in the nearest env.json
+paws-http                         browse files interactively (launcher)
+paws-http run <file.http>         run a single .http flow
+paws-http run <dir>               run every .http in a directory, recursively
+paws-http run <file> --only 1.3   run one step from a file
+paws-http env list                list environments in the nearest env.json
 
   -e, --env <name>     environment (default: local)
   -f, --fail-fast      stop on the first failed step
       --only <step>    run only the step with this num (e.g. 1.2)
 ```
 
-`pawsh` auto-picks a mode: if your terminal is a TTY you get the Ink-based
+`paws-http` auto-picks a mode: if your terminal is a TTY you get the Ink-based
 three-pane TUI; if stdout is piped or `CI=1`, you get a coloured console report
 and a non-zero exit code on failure.
 
@@ -95,7 +95,7 @@ and a non-zero exit code on failure.
 
 ## Environments
 
-`pawsh` reads the same environment files as Rider, discovered by walking up from
+`paws-http` reads the same environment files as Rider, discovered by walking up from
 the `.http` file:
 
 - `http-client.env.json` — checked into the repo, one object per environment.
@@ -121,7 +121,7 @@ the `.http` file:
 ```
 
 OAuth2 entries in v1 look for a pre-fetched bearer token under
-`Security.Auth.<name>.Token` in the private env file — `pawsh` won't run the
+`Security.Auth.<name>.Token` in the private env file — `paws-http` won't run the
 OAuth2 flow for you.
 
 ## Supported HTTP file syntax

@@ -59,7 +59,7 @@ export function Picker({ files, root, onPick, onQuit }: Props) {
           color={theme.brand}
           bold
         >
-          pawsh
+          paws-http
         </Text>
         <Text color={theme.fgDim}> — pick a flow to run</Text>
       </Box>

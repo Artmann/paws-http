@@ -3,7 +3,7 @@
   "release-type": "node",
   "packages": {
     ".": {
-      "package-name": "pawsh",
+      "package-name": "paws-http",
       "changelog-path": "CHANGELOG.md",
       "include-v-in-tag": true,
       "bump-minor-pre-major": true,
