@@ -1,8 +1,9 @@
 import { expect, test } from 'bun:test'
 import {
+  extractScriptImports,
   runPostScript,
   runPreScript,
-  UtilitiesNotSupportedError,
+  ScriptError,
   type ScriptContext
 } from './sandbox.js'
 
@@ -62,12 +63,101 @@ test('clearAll empties globals', () => {
   expect(Object.keys(c.globals)).toHaveLength(0)
 })
 
-test('import from utilities throws UtilitiesNotSupportedError with line', () => {
-  const c = ctx()
+test('extractScriptImports strips imports and collects names', () => {
   const src = `
-// just some comment
-import {wait} from "utilities"
+import { a, b as c } from "utilities"
+import { d } from "./helpers.js"
 client.global.set("x", 1);
 `
-  expect(() => runPreScript(src, c)).toThrow(UtilitiesNotSupportedError)
+  const result = extractScriptImports(src)
+  expect(result.imports).toEqual([
+    {
+      source: 'utilities',
+      bindings: [
+        { exportName: 'a', localName: 'a' },
+        { exportName: 'b', localName: 'c' }
+      ]
+    },
+    {
+      source: './helpers.js',
+      bindings: [{ exportName: 'd', localName: 'd' }]
+    }
+  ])
+  expect(result.stripped).not.toContain('import')
+  expect(result.stripped).toContain('client.global.set')
+})
+
+test('extractScriptImports rejects default and namespace imports', () => {
+  expect(() => extractScriptImports('import x from "utilities"\n')).toThrow(
+    ScriptError
+  )
+  expect(() =>
+    extractScriptImports('import * as u from "utilities"\n')
+  ).toThrow(ScriptError)
+})
+
+test('pre-script can use named imports passed via modules map', () => {
+  const c = ctx()
+  const greet = (name: string) => `hello ${name}`
+  runPreScript(
+    `
+    import { greet } from "utilities"
+    client.global.set("msg", greet("world"));
+    `,
+    c,
+    { utilities: { greet } }
+  )
+  expect(c.globals.msg).toBe('hello world')
+})
+
+test('post-script can use imports from a relative file', () => {
+  const c = ctx()
+  const upper = (s: string) => s.toUpperCase()
+  runPostScript(
+    `
+    import { upper } from "./helpers.js"
+    client.test("upper", function() {
+      client.assert(upper(response.body.name) === "ALICE", "nope");
+    });
+    `,
+    c,
+    {
+      status: 200,
+      body: { name: 'alice' },
+      headers: {},
+      contentType: 'application/json'
+    },
+    { './helpers.js': { upper } }
+  )
+  expect(c.tests).toHaveLength(1)
+  expect(c.tests[0]!.passed).toBe(true)
+})
+
+test('script throws ScriptError when imported module is missing', () => {
+  const c = ctx()
+  expect(() => runPreScript('import { x } from "utilities"\n', c)).toThrow(
+    ScriptError
+  )
+})
+
+test('script throws ScriptError when an exported name is missing', () => {
+  const c = ctx()
+  expect(() =>
+    runPreScript('import { missing } from "utilities"\n', c, {
+      utilities: { other: 1 }
+    })
+  ).toThrow(/no export "missing"/)
+})
+
+test('aliased import binds the alias name', () => {
+  const c = ctx()
+  runPreScript(
+    `
+    import { greet as hi } from "utilities"
+    client.global.set("msg", hi("ada"));
+    `,
+    c,
+    { utilities: { greet: (n: string) => `hi ${n}` } }
+  )
+  expect(c.globals.msg).toBe('hi ada')
 })

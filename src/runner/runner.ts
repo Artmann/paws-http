@@ -2,7 +2,15 @@ import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import type { ResolvedEnv } from '../env.js'
 import type { Flow, Step } from '../parser/types.js'
-import { runPostScript, runPreScript, type ScriptContext } from '../sandbox.js'
+import {
+  extractScriptImports,
+  runPostScript,
+  runPreScript,
+  ScriptError,
+  type ModuleMap,
+  type ScriptContext
+} from '../sandbox.js'
+import { loadModule } from '../utilities.js'
 import { createScope, substitute, type VarScope } from '../vars.js'
 import type {
   FlowReport,
@@ -99,8 +107,14 @@ async function runStep(
 
   // 1. Pre-request script.
   if (step.preScript) {
+    let modules: ModuleMap
     try {
-      runPreScript(step.preScript, ctx)
+      modules = await loadModulesFor(step.preScript, filePath)
+    } catch (err) {
+      return errorReport(step, ctx, start, 'pre-script', err)
+    }
+    try {
+      runPreScript(step.preScript, ctx, modules)
     } catch (err) {
       return errorReport(step, ctx, start, 'pre-script', err)
     }
@@ -131,13 +145,32 @@ async function runStep(
 
   // 4. Post-script + tests.
   if (step.postScript) {
+    let modules: ModuleMap
     try {
-      runPostScript(step.postScript, ctx, {
-        status: snapshot.status,
-        body: snapshot.parsedBody ?? snapshot.rawBody,
-        headers: snapshot.headers,
-        contentType: snapshot.contentType
-      })
+      modules = await loadModulesFor(step.postScript, filePath)
+    } catch (err) {
+      return {
+        step,
+        status: 'error',
+        durationMs: Math.round(performance.now() - start),
+        prepared,
+        response: snapshot,
+        tests: ctx.tests,
+        error: { phase: 'post-script', message: stringifyError(err) }
+      }
+    }
+    try {
+      runPostScript(
+        step.postScript,
+        ctx,
+        {
+          status: snapshot.status,
+          body: snapshot.parsedBody ?? snapshot.rawBody,
+          headers: snapshot.headers,
+          contentType: snapshot.contentType
+        },
+        modules
+      )
     } catch (err) {
       return {
         step,
@@ -160,6 +193,27 @@ async function runStep(
     response: snapshot,
     tests: ctx.tests
   }
+}
+
+async function loadModulesFor(
+  scriptSource: string,
+  httpFilePath: string
+): Promise<ModuleMap> {
+  const { imports } = extractScriptImports(scriptSource)
+  const modules: ModuleMap = {}
+  for (const imp of imports) {
+    if (imp.source in modules) {
+      continue
+    }
+    const exports = await loadModule(httpFilePath, imp.source)
+    if (!exports) {
+      throw new ScriptError(
+        `Cannot resolve "${imp.source}" — file not found next to ${httpFilePath}.`
+      )
+    }
+    modules[imp.source] = exports
+  }
+  return modules
 }
 
 function errorReport(
@@ -248,6 +302,8 @@ async function performRequest(
 }
 
 function stringifyError(err: unknown): string {
-  if (err instanceof Error) return err.message
+  if (err instanceof Error) {
+    return err.message
+  }
   return String(err)
 }

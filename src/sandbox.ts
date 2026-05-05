@@ -33,23 +33,81 @@ export class ScriptError extends Error {
   }
 }
 
-export class UtilitiesNotSupportedError extends ScriptError {
-  constructor(public readonly line: number) {
-    super(
-      `This .http file imports from "utilities" (line ${line}). paws-http v1 does not support utilities.js — skip this step or remove the import.`
-    )
-  }
+const NAMED_IMPORT_RE =
+  /^[ \t]*import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"]\s*;?[ \t]*\r?\n?/gm
+const ANY_IMPORT_RE = /^[ \t]*import\s+/m
+
+export interface ImportBinding {
+  /** Name on the module's exports object. */
+  exportName: string
+  /** Name bound inside the script (after `as` aliasing). */
+  localName: string
 }
 
-const UTILITIES_RE = /^\s*import\s*\{[^}]*\}\s*from\s*['"]utilities['"]/m
+export interface ScriptImport {
+  source: string
+  bindings: ImportBinding[]
+}
 
-export function runPreScript(source: string, ctx: ScriptContext): void {
-  guardUtilities(source)
+export interface ExtractedImports {
+  imports: ScriptImport[]
+  stripped: string
+}
+
+export function extractScriptImports(source: string): ExtractedImports {
+  const imports: ScriptImport[] = []
+  NAMED_IMPORT_RE.lastIndex = 0
+  let match: RegExpExecArray | null
+  while ((match = NAMED_IMPORT_RE.exec(source)) !== null) {
+    const list = match[1]!
+    const importSource = match[2]!
+    const bindings: ImportBinding[] = []
+    for (const part of list.split(',')) {
+      const trimmed = part.trim()
+      if (trimmed.length === 0) {
+        continue
+      }
+      const aliasMatch = /^(\w+)(?:\s+as\s+(\w+))?$/.exec(trimmed)
+      if (!aliasMatch) {
+        throw new ScriptError(
+          `Unsupported import specifier "${trimmed}" from "${importSource}"`
+        )
+      }
+      const exportName = aliasMatch[1]!
+      const localName = aliasMatch[2] ?? exportName
+      bindings.push({ exportName, localName })
+    }
+    imports.push({ source: importSource, bindings })
+  }
+
+  const stripped = source.replace(NAMED_IMPORT_RE, '')
+
+  if (ANY_IMPORT_RE.test(stripped)) {
+    throw new ScriptError(
+      'Only `import { ... } from "<source>"` is supported. Default and namespace imports are not.'
+    )
+  }
+
+  return { imports, stripped }
+}
+
+export type ModuleMap = Record<
+  string,
+  Record<string, unknown> | null | undefined
+>
+
+export function runPreScript(
+  source: string,
+  ctx: ScriptContext,
+  modules?: ModuleMap
+): void {
+  const { imports, stripped } = extractScriptImports(source)
+  const { names, values } = resolveImports(imports, modules)
   const client = makeClient(ctx)
   const request = makeRequestApi(ctx)
   try {
-    const fn = new Function('client', 'request', withStrict(source))
-    fn(client, request)
+    const fn = new Function('client', 'request', ...names, withStrict(stripped))
+    fn(client, request, ...values)
   } catch (err) {
     throw new ScriptError(
       `Pre-request script failed: ${stringifyError(err)}`,
@@ -61,13 +119,20 @@ export function runPreScript(source: string, ctx: ScriptContext): void {
 export function runPostScript(
   source: string,
   ctx: ScriptContext,
-  response: ResponseView
+  response: ResponseView,
+  modules?: ModuleMap
 ): void {
-  guardUtilities(source)
+  const { imports, stripped } = extractScriptImports(source)
+  const { names, values } = resolveImports(imports, modules)
   const client = makeClient(ctx)
   try {
-    const fn = new Function('client', 'response', withStrict(source))
-    fn(client, response)
+    const fn = new Function(
+      'client',
+      'response',
+      ...names,
+      withStrict(stripped)
+    )
+    fn(client, response, ...values)
   } catch (err) {
     throw new ScriptError(
       `Response handler failed: ${stringifyError(err)}`,
@@ -76,17 +141,46 @@ export function runPostScript(
   }
 }
 
-function withStrict(source: string): string {
-  return `"use strict";\n${source}`
+interface ResolvedImports {
+  names: string[]
+  values: unknown[]
 }
 
-function guardUtilities(source: string): void {
-  const match = UTILITIES_RE.exec(source)
-  if (match) {
-    const before = source.slice(0, match.index)
-    const line = before.split('\n').length
-    throw new UtilitiesNotSupportedError(line)
+function resolveImports(
+  imports: ScriptImport[],
+  modules: ModuleMap | undefined
+): ResolvedImports {
+  const names: string[] = []
+  const values: unknown[] = []
+  const seen = new Set<string>()
+
+  for (const imp of imports) {
+    const exports = modules?.[imp.source]
+    if (!exports) {
+      throw new ScriptError(
+        `Cannot resolve "${imp.source}" — file not found next to the .http file.`
+      )
+    }
+    for (const binding of imp.bindings) {
+      if (seen.has(binding.localName)) {
+        continue
+      }
+      if (!(binding.exportName in exports)) {
+        throw new ScriptError(
+          `"${imp.source}" has no export "${binding.exportName}"`
+        )
+      }
+      seen.add(binding.localName)
+      names.push(binding.localName)
+      values.push(exports[binding.exportName])
+    }
   }
+
+  return { names, values }
+}
+
+function withStrict(source: string): string {
+  return `"use strict";\n${source}`
 }
 
 function makeClient(ctx: ScriptContext) {
@@ -102,7 +196,9 @@ function makeClient(ctx: ScriptContext) {
         delete ctx.globals[key]
       },
       clearAll() {
-        for (const k of Object.keys(ctx.globals)) delete ctx.globals[k]
+        for (const k of Object.keys(ctx.globals)) {
+          delete ctx.globals[k]
+        }
       },
       isEmpty() {
         return Object.keys(ctx.globals).length === 0
@@ -127,7 +223,9 @@ function makeClient(ctx: ScriptContext) {
       }
     },
     assert(cond: unknown, message?: string) {
-      if (!cond) throw new Error(message ?? 'Assertion failed')
+      if (!cond) {
+        throw new Error(message ?? 'Assertion failed')
+      }
     },
     log(msg: unknown) {
       ctx.logs.push({ level: 'log', message: String(msg) })
@@ -149,6 +247,8 @@ function makeRequestApi(ctx: ScriptContext) {
 }
 
 function stringifyError(err: unknown): string {
-  if (err instanceof Error) return err.message
+  if (err instanceof Error) {
+    return err.message
+  }
   return String(err)
 }
