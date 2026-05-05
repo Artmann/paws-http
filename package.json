@@ -16,6 +16,14 @@
     "testing"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Artmann/paws-http.git"
+  },
+  "homepage": "https://github.com/Artmann/paws-http#readme",
+  "bugs": {
+    "url": "https://github.com/Artmann/paws-http/issues"
+  },
   "type": "module",
   "main": "dist/cli.js",
   "bin": {
