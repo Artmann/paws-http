@@ -1,5 +1,5 @@
-import type { FlowReport, StepReport } from '../runner/types.js'
-import { methodColor, statusIcon, theme } from '../theme.js'
+import type { FlowReport, StepReport } from '../runner/types'
+import { methodColor, statusIcon, theme } from '../theme'
 
 const NO_COLOR = !!process.env.NO_COLOR || !process.stdout.isTTY
 

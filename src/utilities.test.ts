@@ -2,14 +2,14 @@ import { afterEach, expect, test } from 'bun:test'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { ScriptError } from './sandbox.js'
+import { ScriptError } from './sandbox'
 import {
   clearUtilitiesCache,
   compileModule,
   loadModule,
   loadUtilities,
   resolveModuleSpecifier
-} from './utilities.js'
+} from './utilities'
 
 const tmpDirs: string[] = []
 

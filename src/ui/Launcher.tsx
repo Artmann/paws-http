@@ -1,7 +1,7 @@
 import { Box, Text, useInput } from 'ink'
 import React from 'react'
-import { theme } from '../theme.js'
-import { Kbd } from './primitives.js'
+import { theme } from '../theme'
+import { Kbd } from './primitives'
 
 interface Props {
   onBrowse: () => void

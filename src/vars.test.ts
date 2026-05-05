@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
-import type { ResolvedEnv } from './env.js'
-import { createScope, substitute, VarResolutionError } from './vars.js'
+import type { ResolvedEnv } from './env'
+import { createScope, substitute, VarResolutionError } from './vars'
 
 const env: ResolvedEnv = {
   name: 'local',

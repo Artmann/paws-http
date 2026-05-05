@@ -1,8 +1,8 @@
 import { Box, Text } from 'ink'
 import Spinner from 'ink-spinner'
 import React from 'react'
-import { methodColor, statusIcon, theme } from '../theme.js'
-import type { StepStatus } from '../runner/types.js'
+import { methodColor, statusIcon, theme } from '../theme'
+import type { StepStatus } from '../runner/types'
 
 export function StatusIcon({ status }: { status: StepStatus }) {
   switch (status) {

@@ -38,7 +38,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && chmod +x dist/cli.js",
+    "build": "bun build src/cli.ts --outdir dist --target node --format esm --packages external --sourcemap=external && chmod +x dist/cli.js",
     "clean": "rm -rf dist",
     "dev": "bun src/cli.ts",
     "format": "prettier --write .",

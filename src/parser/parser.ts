@@ -5,8 +5,8 @@ import type {
   HttpMethod,
   ParseWarning,
   Step
-} from './types.js'
-import { ParseError } from './types.js'
+} from './types'
+import { ParseError } from './types'
 
 const METHODS: readonly HttpMethod[] = [
   'GET',

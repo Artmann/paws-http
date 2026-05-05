@@ -1,18 +1,18 @@
 import { Box, Text, useInput, useStdout } from 'ink'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { ResolvedEnv } from '../env.js'
-import type { Flow, Step } from '../parser/types.js'
-import { runFlow } from '../runner/runner.js'
-import type { FlowReport, StepReport } from '../runner/types.js'
-import { theme } from '../theme.js'
-import type { LoadedFile } from './App.js'
+import type { ResolvedEnv } from '../env'
+import type { Flow, Step } from '../parser/types'
+import { runFlow } from '../runner/runner'
+import type { FlowReport, StepReport } from '../runner/types'
+import { theme } from '../theme'
+import type { LoadedFile } from './App'
 import {
   Duration,
   Kbd,
   MethodBadge,
   ProgressBar,
   StatusIcon
-} from './primitives.js'
+} from './primitives'
 
 type Pane = 'files' | 'steps' | 'response'
 type Tab = 'request' | 'response' | 'headers' | 'tests'

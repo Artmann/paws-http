@@ -1,8 +1,8 @@
 import { Box, Text, useInput, useStdout } from 'ink'
 import TextInput from 'ink-text-input'
 import React, { useMemo, useState } from 'react'
-import { theme } from '../theme.js'
-import type { DiscoveredFile } from '../discover.js'
+import { theme } from '../theme'
+import type { DiscoveredFile } from '../discover'
 
 interface Props {
   files: DiscoveredFile[]

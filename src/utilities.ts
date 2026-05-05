@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { dirname, isAbsolute, resolve } from 'node:path'
-import { ScriptError } from './sandbox.js'
+import { ScriptError } from './sandbox'
 
 const cache = new Map<string, Promise<Record<string, unknown> | null>>()
 

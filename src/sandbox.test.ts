@@ -5,7 +5,7 @@ import {
   runPreScript,
   ScriptError,
   type ScriptContext
-} from './sandbox.js'
+} from './sandbox'
 
 function ctx(): ScriptContext {
   return { globals: {}, request: {}, tests: [], logs: [] }

@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
-import type { ResolvedEnv } from '../env.js'
-import { parseHttpFile } from '../parser/parser.js'
-import { runFlow } from './runner.js'
+import type { ResolvedEnv } from '../env'
+import { parseHttpFile } from '../parser/parser'
+import { runFlow } from './runner'
 
 const env: ResolvedEnv = {
   name: 'test',
