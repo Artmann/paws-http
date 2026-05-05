@@ -13,9 +13,17 @@ development loop, and how to add features without breaking the parser for the
 ## Setup
 
 ```sh
+git clone https://github.com/Artmann/paws-http.git
+cd paws-http
 bun install
 bun test              # 32 tests across parser, vars, sandbox, runner
 bun run typecheck     # tsc --noEmit
+```
+
+Want the `paws-http` command on your `$PATH` while hacking?
+
+```sh
+bun link              # exposes `paws-http` from this checkout
 ```
 
 Run the CLI directly — no build step:

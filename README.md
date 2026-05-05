@@ -21,20 +21,22 @@ execute the JavaScript pre- and post-scripts, evaluate
 
 ## Install
 
-```sh
-git clone <this-repo> paws-http
-cd paws-http
-bun install
-bun link              # exposes `paws-http` on your $PATH via the bin entry
-```
-
-Or run it without installing:
+Run it without installing:
 
 ```sh
-bun /path/to/paws-http/src/cli.ts run <file-or-dir>
+npx paws-http
 ```
 
-Requires [Bun](https://bun.com) 1.3+.
+Or install globally:
+
+```sh
+npm install -g paws-http
+```
+
+Requires Node.js 22+.
+
+> Hacking on `paws-http` itself? See [CONTRIBUTING.md](CONTRIBUTING.md) for the
+> source-based setup with Bun.
 
 ## Quick start
 
