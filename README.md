@@ -6,8 +6,8 @@
 
 ![paws-http running the bundled examples](https://raw.githubusercontent.com/Artmann/paws-http/main/docs/screenshot.png)
 
-`paws-http` is to the terminal what the JetBrains HTTP Client is to Rider. Point it
-at a `.http` file (or a directory full of them) and it'll run the requests,
+`paws-http` is to the terminal what the JetBrains HTTP Client is to Rider. Point
+it at a `.http` file (or a directory full of them) and it'll run the requests,
 execute the JavaScript pre- and post-scripts, evaluate
 `client.test`/`client.assert` assertions, and chain values between steps via
 `client.global.set`.
@@ -66,9 +66,8 @@ paws-http env list                list environments in the nearest env.json
 
 `paws-http` auto-picks a mode: if your terminal is a TTY you get the Ink-based
 three-pane TUI; otherwise you get a coloured console report and a non-zero exit
-code on failure. Pass `-n` / `--non-interactive` (or set `CI=1`, or pipe
-stdout) to force the console reporter explicitly — handy for scripts and
-pipelines.
+code on failure. Pass `-n` / `--non-interactive` (or set `CI=1`, or pipe stdout)
+to force the console reporter explicitly — handy for scripts and pipelines.
 
 ## Interactive keys
 
@@ -100,8 +99,8 @@ pipelines.
 
 ## Environments
 
-`paws-http` reads the same environment files as Rider, discovered by walking up from
-the `.http` file:
+`paws-http` reads the same environment files as Rider, discovered by walking up
+from the `.http` file:
 
 - `http-client.env.json` — checked into the repo, one object per environment.
 - `http-client.private.env.json` — gitignored, merged on top for local secrets.
