@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0](https://github.com/Artmann/paws-http/compare/paws-http-v0.1.2...paws-http-v1.0.0) (2026-05-05)
+
+
+### Features
+
+* **sandbox:** support utilities.js and relative .js imports in scripts ([e5ce410](https://github.com/Artmann/paws-http/commit/e5ce410162ffe673d4c0d17fb96cd0cfd981d1dd))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([46a1f24](https://github.com/Artmann/paws-http/commit/46a1f24e0297a4b142b58d26e31884cf433b5757))
+
 ## [0.1.2](https://github.com/Artmann/paws-http/compare/paws-http-v0.1.1...paws-http-v0.1.2) (2026-05-05)
 
 
