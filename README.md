@@ -58,14 +58,17 @@ paws-http run <dir>               run every .http in a directory, recursively
 paws-http run <file> --only 1.3   run one step from a file
 paws-http env list                list environments in the nearest env.json
 
-  -e, --env <name>     environment (default: local)
-  -f, --fail-fast      stop on the first failed step
-      --only <step>    run only the step with this num (e.g. 1.2)
+  -e, --env <name>          environment (default: local)
+  -f, --fail-fast           stop on the first failed step
+      --only <step>         run only the step with this num (e.g. 1.2)
+  -n, --non-interactive     force the console reporter (skip the TUI)
 ```
 
 `paws-http` auto-picks a mode: if your terminal is a TTY you get the Ink-based
-three-pane TUI; if stdout is piped or `CI=1`, you get a coloured console report
-and a non-zero exit code on failure.
+three-pane TUI; otherwise you get a coloured console report and a non-zero exit
+code on failure. Pass `-n` / `--non-interactive` (or set `CI=1`, or pipe
+stdout) to force the console reporter explicitly — handy for scripts and
+pipelines.
 
 ## Interactive keys
 

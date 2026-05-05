@@ -18,6 +18,7 @@ interface CliArgs {
   env?: string
   failFast: boolean
   onlyStep?: string
+  nonInteractive?: boolean
   subcommand?: string
   subArg?: string
 }
@@ -52,6 +53,8 @@ function parseArgs(argv: string[]): CliArgs {
       args.env = queue.shift()
     } else if (arg === '-f' || arg === '--fail-fast') {
       args.failFast = true
+    } else if (arg === '-n' || arg === '--non-interactive') {
+      args.nonInteractive = true
     } else if (arg === '--only') {
       args.onlyStep = queue.shift()
     } else if (arg === '--help' || arg === '-h') {
@@ -82,6 +85,7 @@ Flags:
   -e, --env <name>             environment (default: local)
   -f, --fail-fast              stop on first failed step
       --only <step-num>        run only step with this num (e.g. 1.2)
+  -n, --non-interactive        force the console reporter (skip the TUI)
   -h, --help                   show this help
 `)
 }
@@ -120,7 +124,8 @@ async function main(): Promise<void> {
   }
   const target = resolve(args.path)
 
-  const interactive = process.stdout.isTTY && !process.env.CI
+  const interactive =
+    process.stdout.isTTY && !process.env.CI && !args.nonInteractive
   if (interactive && args.path) {
     await runInteractive(target, args)
     return
