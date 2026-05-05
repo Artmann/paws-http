@@ -1,6 +1,6 @@
 {
   "name": "paws-http",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Terminal-native runner for JetBrains Rider / IntelliJ .http flow files, with an interactive Ink TUI and a plain-text reporter for CI.",
   "keywords": [
     "http",
